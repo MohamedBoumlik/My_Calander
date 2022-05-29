@@ -13,14 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
+Route::get('/',"App\Http\Controllers\EventController@index")->middleware('auth')->name('home');
 
-Route::get('/home',"App\Http\Controllers\EventController@index");
+Route::get('/home',"App\Http\Controllers\EventController@index")->middleware('auth')->name('home');
 
-Route::post('event/store',"App\Http\Controllers\EventController@store");
-Route::post('event/delete/',"App\Http\Controllers\EventController@delete");
+Route::post('event/store',"App\Http\Controllers\EventController@store")->middleware('auth');
+Route::post('event/delete/',"App\Http\Controllers\EventController@delete")->middleware('auth');
 

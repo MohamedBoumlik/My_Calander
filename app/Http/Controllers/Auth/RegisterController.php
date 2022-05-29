@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Mail;
 class RegisterController extends Controller
 {
     /*
@@ -64,10 +64,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user_info = [
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-        ]);
+        ];
+
+        $to_email = $data['email'];
+
+        $title="Welcome to Event Calendar";
+        $message="hi Mr ".$data['name'];
+        $data = array("body"=>$message);
+
+        Mail::send('mail', $data, function($message) use ($to_email, $title) {
+            $message->to($to_email)->subject($title);
+        });
+
+        return User::create($user_info);
     }
 }
