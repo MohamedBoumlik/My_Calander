@@ -19,4 +19,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home',"App\Http\Controllers\EventController@index");
+
+Route::post('event/store',"App\Http\Controllers\EventController@store");
+Route::post('event/delete/',"App\Http\Controllers\EventController@delete");
+

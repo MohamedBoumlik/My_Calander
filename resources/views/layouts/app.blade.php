@@ -12,7 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
@@ -85,123 +87,8 @@
             @yield('content')
         </main>
     </div>
-    <script>
-        $(document).ready(function () {
 
-            $.ajaxSetup({
-                headers:{
-                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            var calendar = $('#calendar').fullCalendar({
-                editable:true,
-                header:{
-                    left:'prev,next today',
-                    center:'title',
-                    right:'month,agendaWeek,agendaDay'
-                },
-                events:'/full-calender',
-                selectable:true,
-                selectHelper: true,
-                select:function(start, end, allDay)
-                {
-                    var title = prompt('Event Title:');
-
-                    if(title)
-                    {
-                        var start = $.fullCalendar.formatDate(start, 'Y-MM-DD HH:mm:ss');
-
-                        var end = $.fullCalendar.formatDate(end, 'Y-MM-DD HH:mm:ss');
-
-                        $.ajax({
-                            url:"/full-calender/action",
-                            type:"POST",
-                            data:{
-                                title: title,
-                                start: start,
-                                end: end,
-                                type: 'add'
-                            },
-                            success:function(data)
-                            {
-                                calendar.fullCalendar('refetchEvents');
-                                alert("Event Created Successfully");
-                            }
-                        })
-                    }
-                },
-                editable:true,
-                eventResize: function(event, delta)
-                {
-                    var start = $.fullCalendar.formatDate(event.start, 'Y-MM-DD HH:mm:ss');
-                    var end = $.fullCalendar.formatDate(event.end, 'Y-MM-DD HH:mm:ss');
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        url:"/full-calender/action",
-                        type:"POST",
-                        data:{
-                            title: title,
-                            start: start,
-                            end: end,
-                            id: id,
-                            type: 'update'
-                        },
-                        success:function(response)
-                        {
-                            calendar.fullCalendar('refetchEvents');
-                            alert("Event Updated Successfully");
-                        }
-                    })
-                },
-                eventDrop: function(event, delta)
-                {
-                    var start = $.fullCalendar.formatDate(event.start, 'Y-MM-DD HH:mm:ss');
-                    var end = $.fullCalendar.formatDate(event.end, 'Y-MM-DD HH:mm:ss');
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        url:"/full-calender/action",
-                        type:"POST",
-                        data:{
-                            title: title,
-                            start: start,
-                            end: end,
-                            id: id,
-                            type: 'update'
-                        },
-                        success:function(response)
-                        {
-                            calendar.fullCalendar('refetchEvents');
-                            alert("Event Updated Successfully");
-                        }
-                    })
-                },
-
-                eventClick:function(event)
-                {
-                    if(confirm("Are you sure you want to remove it?"))
-                    {
-                        var id = event.id;
-                        $.ajax({
-                            url:"/full-calender/action",
-                            type:"POST",
-                            data:{
-                                id:id,
-                                type:"delete"
-                            },
-                            success:function(response)
-                            {
-                                calendar.fullCalendar('refetchEvents');
-                                alert("Event Deleted Successfully");
-                            }
-                        })
-                    }
-                }
-            });
-
-        });
-    </script>
 </body>
+@yield('script')
+
 </html>
